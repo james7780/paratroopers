@@ -1,0 +1,52 @@
+Paratroopers Notes
+
+DONE:
+- [DONE] Way to trigger new objects (add to SCB object table)
+	- [DONE] AddHeli, AddTrooper, AddBullet, AddFragment
+- [DONE] Finish heli behaviour (spawn parachuters)
+- [NPTF] Sub-pixel movement scheme
+	- [DONE] 2nd or 4th frame movement "masking"
+- [DONE] SCB collision register setup
+- [DONE] Use skip flag in SCB
+- [BUSY] Sound fx
+	- [DONE] Shoot
+	- [DONE] Chute hit
+	- [DONE] Para hit   (use splat but with higher pitch?)
+	- [DONE] Heli explosion
+	- [DONE] Base explosion
+	- [NPTF] Trooper landing  ("ding")
+	- [DONE] Trooper splatting
+	- [DONE] Trooper marching
+- [DONE] Shoot parachute off of trooper
+- [DONE] Better animation
+	- [DONE] Wavy parachuters
+	- [DONE] fragments
+	- [DONE] Trooper animation (attacking base)
+	- [DONE] More gun positions (17 instead of 9)
+- [DONE] Title screen
+- [DONE] Game Over
+	- [DONE] Trooper lands on base
+	- [DONE] 4 troopers land on one side
+        - [NPTF] Move troopers one by one?
+	- [DONE] Game over animation (exploding base routine)
+	- [DONE] Main loop and game over logic (re-organise)
+- Gameplay
+	- [DONE] Increasing difficulty
+		- [DONE] Related to score?
+		- [DONE] Helicopter timer decreases as score increases
+		- [NPTF] Paratrooper drop frequency
+	- [DONE] Not dropping troopers offscreen or edge of screen
+	- [DONE] Bomber + bomb  (after a certain score)
+
+TODO:
+- [DONE] 16-bit (BCD?) score and hiscore
+- Save hiscore to EEPROM
+- [DONE] Background gradient
+- Instruction screen?
+
+2024-11-23	- Updated title screen (more colour)
+		- 16-bit score and hi-score 
+		- Decoupled difficulty from score
+		- Difficulty now increases with shots fired
+		- Tweaked ground gradient
+

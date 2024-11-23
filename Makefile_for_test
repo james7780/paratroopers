@@ -1,0 +1,23 @@
+# Makefile for project built with lyxass
+AS=../bin/x64/lyxass.exe
+EMU=C:\Emulators\Mednafen\mednafen.exe
+
+$(info BLL_ROOT is $(BLL_ROOT))
+
+all: test.o
+
+SRC = test.asm
+
+test.o: $(SRC)
+ifeq ($(BLL_ROOT),)
+	$(warning Please set BLL_ROOT environmental variable first!)
+else
+	$(AS) -v -sh $(SRC)
+	$(EMU) $@
+endif
+
+run: test.o
+	$(EMU) test.o
+
+clean:
+	rm -f *.o

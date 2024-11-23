@@ -1,0 +1,74 @@
+BLL sound "commands":
+
+JH 2024-07
+
+If MSB (bit 7) of the next byte in the sound data is "1", this means means "command".
+Else it means "new note" (ie: the 2 parameters of the PLAY macro (freqency, length).
+
+Commands:
+0x00  - Stop playing (on this channel)
+
+0x80 SndLoop              ; count
+0x81 SndDo
+0x82 SndPause             ; count
+0x83 SndNoteOff
+0x84 SndSetInstr          ; shiferinit1,shifterinit2,feedback
+0x85 SndNewNote2          ; reload, prescale ?
+0x86 SndCallPattern       ; SndCallSubr
+0x87 SndRetToSong         ; SndRetSubr
+
+0x88 SndDefEnvVol
+0x89 SndSetEnvVol
+0x8A SndDefEnvFrq
+0x8B SndSetEnvFrq
+0x8C SndDummy             ; SndDefEnvFbk
+0x8D SndDummy             ; SndSetEnvFbk
+
+
+ExampleSndFx:
+                SETFRQ 13               ;15                     ; $8b, 13       (set freq env no)
+                SETVOL 13               ;15                     ; $88, 13       (set vol env no)
+                INSTR 3,120,120                                 ; $84, 0, 0, shifter1, shifter2, feedbacck  (set up instrument params)
+                PLAY 30,40                                      ; play note with <freq, length> (ticks?)
+                STOP                                            ; $83
+                dc.b 0                                          ; sound "play list" terminator
+
+Macros:
+DELAY		$82, count		(SndPause)
+PLAY            ? freq, length
+PLAY2           $85 reload, prescale	(SndNewNote2)
+PATTERN		$86 addr	        (SndCallPattern)
+DEFFRQ		$8A num, addr		(Define freq envelope)
+DEFVOL		$88 num, addr		(Define volume env)
+SETFRQ		$8B freqenvnum		(Set cuurent freq env to use)
+SETVOL		$89 volendnum 		(Set cuurent volume env to use)
+INSTR		$84, 0, 0, shft1, shft2, feedback 			(SndSetIntr) (Define instrument?)
+STOP		$83			(SndNoteOff)
+DO		$80, count		(SndLoop (!) )
+LOOP		$81			(SndDo (!) )
+
+Theoretically you could also play a little tune using PLAY and DELAY macros.
+
+Volume envelope:
+	explenv1:       dc.b 0,1,60,-2
+
+	- see SndChangeVol::
+	- First number = "part" at which loop starts (0 means no loop)
+	- 2nd number = number of "parts" in this envelope
+	- Following numbers seem to be in "count" and "vol increment" pairs ("parts")
+		- For count A, increment vol by B
+
+	In this example, loop begins at part 0 (no loop), there are 1 parts, and part 1 = "60, -2", which
+        means for 60  ticks, decrease vol by 2.
+
+
+Frequency envelope:
+	explenv2        dc.b 1,1,1,-4
+
+	Similar to vol env:
+	- Loop begins at part 1.
+	- There are 1 parts
+	- Part 1 = "1, -4", which means for one tick, decrease freq by 4
+	- Part 1 is looped, which means every tick we are decreasing freq by 4.
+
+	
