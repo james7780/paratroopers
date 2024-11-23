@@ -34,6 +34,7 @@
                 include <vardefs/irq.var>
                 include <vardefs/newkey.var>
                 include <vardefs/sound.var>
+                include <vardefs/eeprom.var>
 
 ; JH Macros
 ; JH - Store AX in address \0 (1st arg)
@@ -43,12 +44,12 @@
 		ENDM
 
     ; ; Copy 16 bit value from one address to the other
-		; MACRO COPY16      ; <src> <dest>
-    ;   lda \0
-    ;   sta \1
-    ;   lda 1+\0
-    ;   sta 1+\1
-		; ENDM
+    MACRO COPY16      ; <src> <dest>
+      LDA \0
+      STA \1
+      LDA 1+\0
+      STA 1+\1
+    ENDM
 
     ; ; Set dest addr to 16-bit value 
 		; MACRO SET16      ; <dest> <value>
@@ -174,6 +175,10 @@ Start::         START_UP              ; Start-Label needed for reStart. START_UP
                 JSR InitAudio
                 ; Reset high score
                 JSR ResetHiScore
+                ; Read hiscore from eeprom
+                LDA #0
+                JSR EE_Read                 ; Read 16-bit Word from eeprom addr 0 to I2Cword variable
+                COPY16 I2Cword, hiScore
 
 .mainLoop
                 JSR ShowTitle
@@ -222,6 +227,10 @@ UpdateHiScore:: ; Compare [hi] byte of score
                 STA hiScore
                 LDA score+1
                 STA hiScore+1
+                ; Write hiscore to eeprom
+                COPY16 hiScore, I2Cword
+                LDA #0
+                JSR EE_Write                 ; Read 16-bit Word from eeprom addr 0 to I2Cword variable
 .exit
                 RTS
 
@@ -722,6 +731,7 @@ HBL::           ; Used to draw background colour
                 include <includes/random2.inc>
                 include <includes/draw_spr.inc>
                 include <includes/sound.inc>
+                include <includes/eeprom.inc>
 
 // Bullet angle to DX/DY table (17 angles as per the gun)
 bulletAnglesDX  dc.b -4, -4, -4, -3, -3, -2, -2, -1,  0,  1,  2,  2,  3,  3,  4,  4,  4
