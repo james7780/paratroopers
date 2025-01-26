@@ -283,9 +283,9 @@ msgHighScore:    dc.b "HIGH SCORE:",0
 
 ; Set up a new game
 InitGame::      JSR ResetScore
-                ;LDA #200
-                ;STA difficulty
-                STZ difficulty
+                ;STZ difficulty
+                LDA #30                     ; Startng "difficulty" value
+                STA difficulty
                 STZ landedCountLeft
                 STZ landedCountRight
                 STZ troopersAtBase
@@ -315,9 +315,9 @@ PlayGame::
                 JSR PrintScore
 
 ; DEBUG - Display difficulty level
-                SET_XY 140,90
-                LDA difficulty
-                JSR PrintDezA   
+;                SET_XY 140,90
+;                LDA difficulty
+;                JSR PrintDezA   
 
                 ; Check if troopers have bombed the base (or trooper landed on base)
                 LDA troopersAtBase               
